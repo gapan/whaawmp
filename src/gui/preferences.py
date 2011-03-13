@@ -24,7 +24,7 @@
 #		is covered. (See COPYING file for more details)
 
 import pygtk
-pygtk.require('2.0')
+pyGtk.require('2.0')
 import gtk, gobject
 from common import useful, lists
 from common.config import cfg
@@ -42,7 +42,7 @@ class Dialogue:
 		
 		# Create the dialogue and connect signals using gtk-builder.
 		windowname = 'PreferencesDlg'
-		self.wTree = gtk.Builder()
+		self.wTree = Gtk.Builder()
 		self.wTree.add_from_file(useful.getBuilderFile('preferences'))
 		
 		
@@ -83,7 +83,7 @@ class Dialogue:
 		# More easy access.
 		self.window = self.wTree.get_object(windowname)
 		# Set the parent window to the widget passed (hopefully the main window.)
-		self.window.set_transient_for(parent)
+		self.set_transient_for(parent)
 		
 		self.prepareAudioDevCmb()	
 		# Load the preferences.
@@ -174,7 +174,7 @@ class Dialogue:
 	def prepareAudioDevCmb(self):
 		## Prepares the audio device combo box.
 		# Create the combo box for the selection.
-		audioCmbBox = gtk.combo_box_new_text()
+		audioCmbBox = Gtk.ComboBoxText()
 		self.wTree.get_object('hboxAudioDevice').pack_end(audioCmbBox)
 		audioCmbBox.connect('changed', self.changeAudioDevice)
 		audioCmbBox.show()

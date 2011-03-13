@@ -28,7 +28,7 @@ import sys, warnings
 
 warnings.filterwarnings('error', module='gtk')
 try:
-	import gtk
+	from gi.repository import Gtk
 except ImportError:
 	print _("Cannot continue, pygtk is not installed (version 2.12 required)")
 	sys.exit(1)
@@ -38,6 +38,6 @@ except Warning:
 warnings.resetwarnings()
 
 # Check that GTK+ 2.12 or greater is being used.
-if (gtk.gtk_version < (2, 12)):
+if (Gtk.gtk_version < (2, 12)):
 	print _("Cannot continue, this program requires at least GTK+ 2.12 to run.")
 	sys.exit(1)

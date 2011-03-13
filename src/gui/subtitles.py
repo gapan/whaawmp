@@ -28,7 +28,7 @@ import os
 from common.gstPlayer import player
 from common.config import cfg
 from common import useful
-import gtk
+from gi.repository import Gtk
 
 class subMan():
 	# A subtitle manager window.
@@ -58,14 +58,14 @@ class subMan():
 	
 	def addSubs(self, widget):
 		# Add subtitles to the current file from a file dialogue.
-		dlg = gtk.FileChooserDialog(_("Choose a subtitle stream."), self.window,
-		                  buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-		                             gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+		dlg = Gtk.FileChooserDialog(_("Choose a subtitle stream."), self.window,
+		                  buttons = (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+		                             Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
 		# Use the same folder as the last file opened.
 		dlg.set_current_folder(useful.lastFolder)
 		res = dlg.run()
 		
-		if (res == gtk.RESPONSE_OK) and (player.player.get_property('n-video') >= 1):
+		if (res == Gtk.ResponseType.OK) and (player.player.get_property('n-video') >= 1):
 			# If the response was 'OK' and there is a video track get the filename.
 			file = dlg.get_filename()
 			# We need to restart the player so the subtitles work.
@@ -81,48 +81,48 @@ class subMan():
 	
 	def __init__(self, parent):
 		# The subtitle manager window.
-		window = gtk.Window()
+		window = Gtk.Window()
 		window.set_title(_("Subtitle Manager"))
 		window.set_transient_for(parent)
 		window.set_destroy_with_parent(True)
 		window.connect('delete-event', self.destroy)
 		self.window = window
-		vBox = gtk.VBox()
+		vBox = Gtk.VBox()
 		window.add(vBox)
 		# The automatic subtitles checkbox.
-		chkAutoSubs = gtk.CheckButton(_("Automatic Subtitles"))
+		chkAutoSubs = Gtk.CheckButton(_("Automatic Subtitles"))
 		chkAutoSubs.set_has_tooltip(True)
 		chkAutoSubs.set_tooltip_text(_("Try to automatically find subtitles for each file."))
 		chkAutoSubs.connect('toggled', self.autoSubsToggled)
 		self.chkAutoSubs = chkAutoSubs
-		vBox.pack_start(chkAutoSubs)
-		hBox = gtk.HBox()
-		vBox.pack_start(hBox)
+		vBox.pack_start(chkAutoSubs, True, True, 0)
+		hBox = Gtk.HBox()
+		vBox.pack_start(hBox, True, True, 0)
 		# The automatic subtitle extensions entry.
-		lblSubsExt = gtk.Label(_("Subtitle file extensions"))
-		hBox.pack_start(lblSubsExt)
-		txtSubsExt = gtk.Entry()
+		lblSubsExt = Gtk.Label(label=_("Subtitle file extensions"))
+		hBox.pack_start(lblSubsExt, True, True, 0)
+		txtSubsExt = Gtk.Entry()
 		txtSubsExt.set_has_tooltip(True)
 		txtSubsExt.set_tooltip_text(_("Extensions to use when automatically detecting subtitles.\nSepatare with commas."))
 		txtSubsExt.connect('changed', self.subsExtsChanged)
 		self.txtSubsExt = txtSubsExt
-		hBox.pack_start(txtSubsExt)
+		hBox.pack_start(txtSubsExt, True, True, 0)
 		# The add subtitles to current stream button.
-		btnAddSub = gtk.Button(_("Add subtitles to current stream"))
-		img = gtk.Image()
-		img.set_from_stock(gtk.STOCK_ADD, gtk.ICON_SIZE_BUTTON)
+		btnAddSub = Gtk.Button(_("Add subtitles to current stream"))
+		img = Gtk.Image()
+		img.set_from_stock(Gtk.STOCK_ADD, Gtk.IconSize.BUTTON)
 		btnAddSub.set_image(img)
 		btnAddSub.connect('clicked', self.addSubs)
-		vBox.pack_start(btnAddSub)
+		vBox.pack_start(btnAddSub, True, True, 0)
 		# Font selection.
-		btnFont = gtk.FontButton(cfg.get('video/subfont'))
+		btnFont = Gtk.FontButton(cfg.get('video/subfont'))
 		btnFont.connect('font-set', self.changeFont)
-		vBox.pack_start(btnFont)
+		vBox.pack_start(btnFont, True, True, 0)
 		# The close button.
-		btnClose = gtk.Button('gtk-close')
+		btnClose = Gtk.Button('gtk-close')
 		btnClose.set_use_stock(True)
 		btnClose.connect('clicked', self.destroy)
-		vBox.pack_start(btnClose)
+		vBox.pack_start(btnClose, True, True, 0)
 		# Do it all.
 		self.getCfg()
 		window.show_all()
