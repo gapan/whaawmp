@@ -23,9 +23,7 @@
 #		the permissions granted by the GPL licence by which Whaaw! Media Player
 #		is covered. (See COPYING file for more details)
 
-import pygtk
-pyGtk.require('2.0')
-import gtk, gobject
+from gi.repository import Gtk, Gdk, GObject
 import os, urllib, urlparse
 from gui import dialogues
 from common import gstTagger as tagger
@@ -224,16 +222,16 @@ class queues():
 	def createWindow(self):
 		## Creates the window of the queue.
 		# First create the list, it contains two strings (1st path, 2nd display) and a boolean (is file video).
-		self.list = Gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN)
+		self.list = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_BOOLEAN)
 		# Create the queue window/box
 		self.qwin = Gtk.VBox()
 		# Set size.
 		self.qwin.set_size_request(-1, self.queueHeight)
 		# Set the window up for draq & drop.
-		self.Gtk.drag_dest_set(qwin, Gtk.DEST_DEFAULT_ALL, [("text/uri-list", 0, 0)], Gdk.DragAction.COPY)
+		self.qwin.drag_dest_set(Gtk.DestDefaults.ALL, None, Gdk.DragAction.COPY)
 		self.qwin.connect('drag-data-received', self.enqueueDropped)
 		# Create the tree view.
-		self.tree = Gtk.TreeView(self.list)
+		self.tree = Gtk.TreeView(model=self.list)
 		# Add a text renderer for the display column & add it to the view.
 		renderer = Gtk.CellRendererText()
 		column = Gtk.TreeViewColumn(_("Queued Tracks:"), renderer, text=1)
@@ -260,13 +258,13 @@ class queues():
 		btnAdd.connect('clicked', self.startAddDialogue)
 		# Create a horizontal box and add the clear & remove buttons to it.
 		hBox = Gtk.HBox()
-		hBox.pack_end(btnClear, False, False)
-		hBox.pack_end(btnRemove, False, False)
-		hBox.pack_end(btnAdd, False, False)
+		hBox.pack_end(btnClear, False, False, 0)
+		hBox.pack_end(btnRemove, False, False, 0)
+		hBox.pack_end(btnAdd, False, False, 0)
 		# Create a vertical box and add the tree (in the scroll widget) and
 		# the horizontal box with the buttons to it.
 		self.qwin.pack_start(scrolly, True, True, 0)
-		self.qwin.pack_start(hBox, False, False)
+		self.qwin.pack_start(hBox, False, False, 0)
 		# Add tooltips to the buttons.
 		btnClear.set_tooltip_text(_('Clear Queue'))
 		btnRemove.set_tooltip_text(_('Remove item from Queue'))

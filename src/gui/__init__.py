@@ -26,7 +26,7 @@
 # Check that GTK+ is installed, and that an X server is available.
 import sys, warnings
 
-warnings.filterwarnings('error', module='gtk')
+warnings.filterwarnings('error', module='Gtk')
 try:
 	from gi.repository import Gtk
 except ImportError:
@@ -38,6 +38,6 @@ except Warning:
 warnings.resetwarnings()
 
 # Check that GTK+ 2.12 or greater is being used.
-if (Gtk.gtk_version < (2, 12)):
-	print _("Cannot continue, this program requires at least GTK+ 2.12 to run.")
-	sys.exit(1)
+## FIXMEGTK3 if (Gtk.gtk_version < (2, 12)):
+#	print _("Cannot continue, this program requires at least GTK+ 2.12 to run.")
+#	sys.exit(1)

@@ -24,10 +24,10 @@
 #		is covered. (See COPYING file for more details)
 
 import sys, os, signal, urllib, urlparse
-import pygtk, pygst
-pyGtk.require('2.0')
+import pygst
 pygst.require('0.10')
-import gtk, gobject, gst
+from gi.repository import Gtk, Gdk, GObject 
+import gst
 from random import randint
 
 from gui import dialogues, preferences
@@ -114,13 +114,13 @@ class mainWindow:
 	def removeIdleTimer(self):
 		try:
 			# Stop the timer to hide the cursor.
-			gobject.source_remove(self.idleTimer)
+			GObject.source_remove(self.idleTimer)
 		except:
 			pass
 	
 	def createIdleTimer(self):
 		# Create the timer again, with the timeout reset.
-		self.idleTimer = gobject.timeout_add(cfg.getInt("gui/mousehidetimeout"), self.hideControls)
+		self.idleTimer = GObject.timeout_add(cfg.getInt("gui/mousehidetimeout"), self.hideControls)
 	
 	
 	def showControls(self):
@@ -175,7 +175,7 @@ class mainWindow:
 		for x in lists.hiddenFSWidgets:
 			self.wTree.get_object(x).hide()
 		# Unfullscreen the window when we're idle (stops weird dimensions).
-		gobject.idle_add(self.mainWindow.unfullscreen)
+		GObject.idle_add(self.mainWindow.unfullscreen)
 	
 	
 	def toggleFullscreen(self, widget=None):
@@ -611,7 +611,7 @@ class mainWindow:
 		# Just seek to 0.
 		player.seek(0)
 		# Update the progrss bar.
-		gobject.idle_add(self.progressUpdate)
+		GObject.idle_add(self.progressUpdate)
 		# Make sure the player is playing (ie. if it was paused etc)
 		player.play()
 		
@@ -647,13 +647,13 @@ class mainWindow:
 		# Destroy the timers first to avoid about 20 of them.
 		self.destroyPlayTimers()
 		# Create timers that go off every minute, and second.
-		self.tmrSec = gobject.timeout_add_seconds(1, self.secondTimer)
-		self.tmrMin = gobject.timeout_add_seconds(60, self.minuteTimer)
+		self.tmrSec = GObject.timeout_add_seconds(1, self.secondTimer)
+		self.tmrMin = GObject.timeout_add_seconds(60, self.minuteTimer)
 	
 	def destroyPlayTimers(self):
 		# Destroy the timers since nothing's happening.
-		if self.tmrMin: gobject.source_remove(self.tmrMin)
-		if self.tmrSec: gobject.source_remove(self.tmrSec)
+		if self.tmrMin: GObject.source_remove(self.tmrMin)
+		if self.tmrSec: GObject.source_remove(self.tmrSec)
 	
 
 	def drawvideoWindowImage(self):
@@ -772,8 +772,10 @@ class mainWindow:
 	def connectLinkHooks(self):
 		## Make hooks for opening URLs and e-mails.
 		if (useful.checkLinkHandler):
-			Gtk.about_dialog_set_email_hook(self.URLorMailOpen, 'mail')
-			Gtk.about_dialog_set_url_hook(self.URLorMailOpen, 'url')
+			pass
+			## FIXMEGTK3
+			#Gtk.about_dialog_set_email_hook(self.URLorMailOpen, 'mail')
+			#Gtk.about_dialog_set_url_hook(self.URLorMailOpen, 'url')
 		else:
 			# xdg-open doesn't exist.
 			print _("%s not found, links & e-mail addresses will not be clickable" % useful.linkHandler)
@@ -824,7 +826,7 @@ class mainWindow:
 		# Set the last folder to the directory from which the program was called.
 		useful.lastFolder = useful.origDir
 		# Set the application's name (for about dialogue etc).
-		gobject.set_application_name(str(useful.lName))
+		GObject.set_application_name(str(useful.lName))
 		
 		# Create & prepare the player for playing.
 		self.preparePlayer()
@@ -892,9 +894,9 @@ class mainWindow:
 		# Set the icon.
 		self.mainWindow.set_icon_from_file(os.path.join(useful.dataDir, 'images', 'whaawmp48.png'))
 		# Set the window to allow drops
-		self.Gtk.drag_dest_set(mainWindow, Gtk.DEST_DEFAULT_ALL, [("text/uri-list", 0, 0)], Gdk.DragAction.COPY)
+		self.mainWindow.drag_dest_set(Gtk.DestDefaults.ALL, None, Gdk.DragAction.COPY)
 		# If we drop stuff on the queue label we want it queued (bottom right)
-		self.wTree.Gtk.drag_dest_set(get_object('lblNumQueued'), Gtk.DEST_DEFAULT_ALL, [("text/uri-list", 0, 0)], Gdk.DragAction.COPY)
+		self.wTree.get_object('lblNumQueued').drag_dest_set(Gtk.DestDefaults.ALL, None, Gdk.DragAction.COPY)
 		self.wTree.get_object('lblNumQueued').connect('drag-data-received', queue.enqueueDropped)
 		# Update the progress bar.
 		self.progressUpdate()
@@ -922,7 +924,7 @@ class mainWindow:
 		# Show the window.
 		self.mainWindow.show()
 		# Save the windows ID so we can use it to inhibit screensaver.
-		useful.winID = self.mainWindow.get_window().xid
+		## FIXMEGTK3 useful.winID = self.mainWindow.get_window().xid
 		# Set the queue play command, so it can play tracks.
 		queue.playCommand = self.playFile
 		# Play a file (if it was specified on the command line).
@@ -930,7 +932,7 @@ class mainWindow:
 			# Append all tracks to the queue.
 			queue.appendMany(cfg.args)
 			# Then play the next track.
-			gobject.idle_add(self.playNext, False)
+			GObject.idle_add(self.playNext, False)
 		
 		if (cfg.cl.fullscreen):
 			# If the fullscreen option was passed, start fullscreen.

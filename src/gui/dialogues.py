@@ -23,9 +23,7 @@
 #		the permissions granted by the GPL licence by which Whaaw! Media Player
 #		is covered. (See COPYING file for more details)
 
-import pygtk
-pyGtk.require('2.0')
-import gtk, gobject
+from gi.repository import Gtk, GdkPixbuf, GObject
 import os
 from common import lists, useful
 from common.config import cfg
