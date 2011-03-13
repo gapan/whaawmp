@@ -54,7 +54,8 @@ class mainWindow:
 		# Stop the player first to avoid tracebacks.
 		player.stopCompletely()
 		# Restore the screensaver.
-		useful.resumeScr()
+		## FIXMEGTK3
+		#useful.resumeScr()
 		# Save the configuration to the file.
 		cfg.save()
 		Gtk.main_quit()
@@ -77,14 +78,15 @@ class mainWindow:
 	
 	def videoWindowConfigure(self, widget, event=None):
 		# Get the window's allocation.
-		x, y, w, h = widget.get_allocation()
+		alloc = widget.get_allocation()
 		
 		# Make a new pixmap (does this create a leak?)
-		self.pixmap = Gdk.Pixmap(widget.window, w, h)
+		#self.pixmap = Gdk.Pixmap(widget.window, alloc.w, alloc.h)
 		
 		# Fill the whole thing with black so it looks nicer (better than white).
-		colour = widget.get_style().black_gc
-		self.pixmap.draw_rectangle(colour, True, 0, 0, w, h)
+		## FIXMEGTK3
+		#colour = widget.get_style().black_gc
+		#widget.draw_rectangle(colour, True, 0, 0, alloc.w, alloc.h)
 		# Queue the drawing area.
 		widget.queue_draw()
 	
@@ -151,8 +153,8 @@ class mainWindow:
 	
 	def hideCursor(self, widget):
 		## Hides the cursor.
-		# The colour of the cursor (defaults to (r, g, b) = (0, 0, 0).
-		colour = Gdk.Color()
+		# The colour of the cursor.
+		colour = Gdk.Color(0,0,0)
 		# Create the hidden cursor.
 		pixmap = Gdk.Pixmap(None, 1, 1, 1)
 		invisible = Gdk.Cursor.new(pixmap, pixmap, colour, colour, 0, 0)
@@ -161,7 +163,9 @@ class mainWindow:
 	
 	def setCursor(self, mode, widget):
 		## Sets a cursor to the one specified.
-		widget.window.set_cursor(mode)
+		## FIXMEGTK3
+		pass
+		#widget.window.set_cursor(mode)
 	
 	
 	def activateFullscreen(self, widget=None):
@@ -201,7 +205,8 @@ class mainWindow:
 	
 	def videoWindowClicked(self, widget, event):
 		# Get the even information.
-		x, y, state = event.window.get_pointer()
+		## FIXMEGTK3 work out what the um value is actually.
+		um, x, y, state = event.window.get_pointer()
 		
 		if (event.type == Gdk._2BUTTON_PRESS and state & Gdk.EventMask.BUTTON1_MASK):
 			# If the window was double clicked, fullsreen toggle.
@@ -427,7 +432,7 @@ class mainWindow:
 			# Try to set the subtitle track if requested.
 			if cfg.getBool('video/autosub'): subtitles.trySubs(file)
 			# Add the file to recently opened files.
-			Gtk.recent_manager_get_default().add_item(file)
+			## FIXMEGTK3 Gtk.recent_manager_get_default().add_item(file)
 			# Start the player, if it isn't already running.
 			if (not player.isPlaying()): player.play()
 		
@@ -536,7 +541,8 @@ class mainWindow:
 	
 	def onMainStateEvent(self, widget, event):
 		## Acts when a state event occurs on the main window.
-		fs = event.new_window_state & Gdk.WINDOW_STATE_FULLSCREEN
+		## FIXMEGTK3
+		fs = False #event.new_window_state & Gdk.WINDOW_STATE_FULLSCREEN
 		if (fs):
 			# Hide all the widgets other than the video window.
 			for x in lists.hiddenFSWidgets:
@@ -854,7 +860,7 @@ class mainWindow:
 		        "on_btnVolume_value_changed" : self.changeVolume,
 		        "on_mnuiFS_activate" : self.toggleFullscreen,
 		        "on_btnLeaveFullscreen_clicked" : self.toggleFullscreen,
-		        "on_videoWindow_expose_event" : self.videoWindowExpose,
+		        ## FIXMEGTK3 "on_videoWindow_expose_event" : self.videoWindowExpose,
 		        "on_videoWindow_configure_event" : self.videoWindowConfigure,
 		        "on_main_key_press_event" : self.windowKeyPressed,
 		        "on_videoWindow_button_press_event" : self.videoWindowClicked,
