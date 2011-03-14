@@ -152,6 +152,8 @@ class mainWindow:
 	
 	
 	def hideCursor(self, widget):
+		## FIXMEGTK3
+		return
 		## Hides the cursor.
 		# The colour of the cursor.
 		colour = Gdk.Color(0,0,0)
