@@ -777,21 +777,6 @@ class mainWindow:
 			hboxHeight = ctrls.get_allocation().height
 			useful.modifyWinHeight(self.mainWindow, - (hboxHeight))
 	
-	def connectLinkHooks(self):
-		## Make hooks for opening URLs and e-mails.
-		if (useful.checkLinkHandler):
-			pass
-			## FIXMEGTK3
-			#Gtk.about_dialog_set_email_hook(self.URLorMailOpen, 'mail')
-			#Gtk.about_dialog_set_url_hook(self.URLorMailOpen, 'url')
-		else:
-			# xdg-open doesn't exist.
-			print _("%s not found, links & e-mail addresses will not be clickable" % useful.linkHandler)
-	
-	def URLorMailOpen(self, dialog, link, type):
-		# Transfers the call to the useful call.
-		useful.URLorMailOpen(link, type)
-	
 	def openBugReporter(self, widget):
 		## Opens the bugs webpage.
 		link = "http://gna.org/bugs/?group=whaawmp"
@@ -945,9 +930,6 @@ class mainWindow:
 		if (cfg.cl.fullscreen):
 			# If the fullscreen option was passed, start fullscreen.
 			self.activateFullscreen()
-		
-		# Connect the hooks.
-		self.connectLinkHooks()
 		
 		# Enter the GTK main loop.
 		Gtk.main()

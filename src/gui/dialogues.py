@@ -50,7 +50,7 @@ class AboutDialogue:
 		# Set the logo.
 		dlg.set_logo(GdkPixbuf.Pixbuf.new_from_file_at_size(os.path.join(useful.dataDir, 'images', 'whaawmp800.png'), 200, 200))
 		# Set the comment.
-		dlg.set_comments("GTK+ %s, GStreamer %s" % (useful.verTupleToStr(Gtk.gtk_version), useful.verTupleToStr(player.version)))
+		## FIXMEGTK3 dlg.set_comments("GTK+ %s, GStreamer %s" % (useful.verTupleToStr(Gtk.gtk_version), useful.verTupleToStr(player.version)))
 		
 		# Run, then destroy the dialogue.
 		dlg.run()

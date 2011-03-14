@@ -45,8 +45,6 @@ videoWindowSize = None
 # Executions with no output.
 hiddenExec = lambda x: os.system(x +  '>/dev/null 2>/dev/null &')
 
-linkHandler = 'xdg-open'
-
 # Converts nanoseconds to seconds.
 nsTos = lambda ns: float(ns) / 1000000000
 # Seconds to miliseconds.
@@ -74,8 +72,6 @@ def toRange(val, min, max):
 	if (val < min): val = min
 	if (val > max): val = max
 	return val
-
-checkLinkHandler = not(hiddenExec('which %s' % linkHandler))
 
 def URLorMailOpen(link, type=None):
 	## Opens a url or an e-mail composer (only uses xdg-open so far)
