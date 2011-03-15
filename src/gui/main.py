@@ -210,10 +210,10 @@ class mainWindow:
 		## FIXMEGTK3 work out what the um value is actually.
 		um, x, y, state = event.window.get_pointer()
 		
-		if (event.type == Gdk._2BUTTON_PRESS and state & Gdk.EventMask.BUTTON1_MASK):
+		if (event.type == Gdk.EventType._2BUTTON_PRESS and state & Gdk.ModifierType.BUTTON1_MASK):
 			# If the window was double clicked, fullsreen toggle.
 			self.toggleFullscreen()
-		elif (event.type == Gdk.EventType.BUTTON_PRESS and state & Gdk.EventMask.BUTTON2_MASK):
+		elif (event.type == Gdk.EventType.BUTTON_PRESS and state & Gdk.ModifierType.BUTTON2_MASK):
 			# If it was middle clicked, toggle play/pause.
 			self.togglePlayPause()
 		else:
