@@ -228,8 +228,9 @@ class queues():
 		# Set size.
 		self.qwin.set_size_request(-1, self.queueHeight)
 		# Set the window up for draq & drop.
-		self.qwin.drag_dest_set(Gtk.DestDefaults.ALL, None, Gdk.DragAction.COPY)
-		self.qwin.connect('drag-data-received', self.enqueueDropped)
+		## FIXMEGTK3
+		#self.qwin.drag_dest_set(Gtk.DestDefaults.ALL, None, Gdk.DragAction.COPY)
+		#self.qwin.connect('drag-data-received', self.enqueueDropped)
 		# Create the tree view.
 		self.tree = Gtk.TreeView(model=self.list)
 		# Add a text renderer for the display column & add it to the view.
