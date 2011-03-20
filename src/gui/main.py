@@ -47,6 +47,8 @@ class mainWindow:
 	tmrSec = None
 	# Holds the URI for the currently displayed window's title.
 	titlesURI = None
+	# Saves the fulscreen state.
+	fullscreen = False
 	
 	
 	def quit(self, widget=None, event=None):
@@ -142,7 +144,7 @@ class mainWindow:
 		## Hides the fullscreen controls (also the mouse).
 		# Hide the cursor.
 		self.hideCursor(self.videoWindow)
-		if (self.fsActive()):
+		if (self.fullscreen):
 			# Only hide the controls if we're in fullscreen.
 			# Hides all the widgets that should be hidden.
 			for x in lists.fsShowWMouse:
@@ -181,12 +183,12 @@ class mainWindow:
 		for x in lists.hiddenFSWidgets:
 			self.wTree.get_object(x).hide()
 		# Unfullscreen the window when we're idle (stops weird dimensions).
-		GObject.idle_add(self.mainWindow.unfullscreen)
+		self.mainWindow.unfullscreen()
 	
 	
 	def toggleFullscreen(self, widget=None):
 		# If the fullscreen window is shown, hide it, otherwise, show it.
-		if (self.fsActive()):
+		if (self.fullscreen):
 			self.deactivateFullscreen()
 		else:
 			self.activateFullscreen()
@@ -543,8 +545,7 @@ class mainWindow:
 	
 	def onMainStateEvent(self, widget, event):
 		## Acts when a state event occurs on the main window.
-		## FIXMEGTK3
-		fs = False #event.new_window_state & Gdk.WINDOW_STATE_FULLSCREEN
+		fs = event.new_window_state & Gdk.WindowState.FULLSCREEN
 		if (fs):
 			# Hide all the widgets other than the video window.
 			for x in lists.hiddenFSWidgets:
@@ -688,9 +689,9 @@ class mainWindow:
 		self.videoWindow.window.draw_pixbuf(self.videoWindow.get_style().black_gc,bgPixbuf.scale_simple(size, size, GdkPixbuf.InterpType.NEAREST), 0, 0, x1, y1)
 
 	
-	def fsActive(self):
-		## Returns True if fullscreen is active.
-		return self.mainWindow.window.get_state() & Gdk.WINDOW_STATE_FULLSCREEN
+	def fsChanged(self, widget, event):
+		## Changes the fullscreen flag.
+		self.fullscreen = event.new_window_state & Gdk.WindowState.FULLSCREEN
 		
 	
 	def showOpenDialogue(self, widget=None):
@@ -886,6 +887,8 @@ class mainWindow:
 		self.isvideo = None
 		# Set the icon.
 		self.mainWindow.set_icon_from_file(os.path.join(useful.dataDir, 'images', 'whaawmp48.png'))
+		# So we can track fullscreen state.
+		self.mainWindow.connect('window-state-event', self.fsChanged)
 		# Set the window to allow drops
 		## FIXMEGTK3
 		#self.mainWindow.drag_dest_set(Gtk.DestDefaults.ALL, None, Gdk.DragAction.COPY)
