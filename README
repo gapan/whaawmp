@@ -1,3 +1,7 @@
+GTK3 branch.  This is more of a test to see how doable it is to get whaawmp to
+run with GTK3, and eventually taking over as the main toolkit.
+So far it doesn't work that well.
+
 Whaaw! Media Player installation instructions.
 Written by Jeff Bailes.
 
