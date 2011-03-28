@@ -63,19 +63,25 @@ class mainWindow:
 		Gtk.main_quit()
 	
 	
-	def videoWindowExpose(self, widget, event):
+	def videoWindowDraw(self, widget, event):
 		# Pull the dimensions etc.
-		x, y, w, h = event.area
+		context = widget.get_window().cairo_create()
 		
+		(x, y, width, height) =  event.clip_extents()
+		context.rectangle(x, y, width, height)
+		
+		context.clip()
+		
+		## FIXMEGTK3
 		# Let the whole thing be drawn upon.
-		colour = widget.get_style().black_gc
-		widget.window.draw_drawable(colour,
-		                            self.pixmap, x, y, x, y, w, h)
+		#colour = widget.get_style().black_gc
+		#widget.window.draw_drawable(colour,
+		#                            self.pixmap, x, y, x, y, w, h)
 		# Save the current video window size.
-		useful.videoWindowSize = self.pixmap.get_size()
+		#useful.videoWindowSize = self.pixmap.get_size()
 		# Draw the background Image.
-		if (player.isStopped() or player.player.get_property('n-video') == 0):
-			self.drawvideoWindowImage()
+		#if (player.isStopped() or player.player.get_property('n-video') == 0):
+		#	self.drawvideoWindowImage()
 	
 	
 	def videoWindowConfigure(self, widget, event=None):
@@ -848,7 +854,7 @@ class mainWindow:
 		        "on_btnVolume_value_changed" : self.changeVolume,
 		        "on_mnuiFS_activate" : self.toggleFullscreen,
 		        "on_btnLeaveFullscreen_clicked" : self.toggleFullscreen,
-		        ## FIXMEGTK3 "on_videoWindow_expose_event" : self.videoWindowExpose,
+		        "on_videoWindow_draw" : self.videoWindowDraw,
 		        "on_videoWindow_configure_event" : self.videoWindowConfigure,
 		        "on_main_key_press_event" : self.windowKeyPressed,
 		        "on_videoWindow_button_press_event" : self.videoWindowClicked,
