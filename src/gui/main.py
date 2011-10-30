@@ -280,6 +280,7 @@ class mainWindow:
 		# Sets the sinks.
 		player.setAudioSink()
 		player.setVideoSink()
+		player.setSubtitleTrack(-1)
 	
 	
 	def onPlayerMessage(self, bus, message):
