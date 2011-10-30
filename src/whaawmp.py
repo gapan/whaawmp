@@ -27,8 +27,8 @@
 import sys
 from optparse import OptionParser
 
-import gobject
-gobject.threads_init()
+from gi.repository import GObject
+GObject.threads_init()
 import gettext
 gettext.install('whaawmp', unicode=1)
 from common import useful

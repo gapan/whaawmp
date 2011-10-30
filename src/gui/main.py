@@ -26,6 +26,7 @@
 import sys, os, signal, urllib, urlparse
 import pygst
 pygst.require('0.10')
+from gi.repository import GdkX11 # This must be done before Gtk so we can get_xid().
 from gi.repository import Gtk, Gdk, GObject 
 import gst
 from random import randint
@@ -927,7 +928,7 @@ class mainWindow:
 		# Show the window.
 		self.mainWindow.show()
 		# Save the windows ID so we can use it to inhibit screensaver.
-		## FIXMEGTK3 useful.winID = self.mainWindow.get_window().xid
+		useful.winID = self.mainWindow.get_window().get_xid()
 		# Set the queue play command, so it can play tracks.
 		queue.playCommand = self.playFile
 		# Play a file (if it was specified on the command line).

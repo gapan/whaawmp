@@ -163,7 +163,7 @@ class Player:
 	def setImgSink(self, widget):
 		## Sets the video output to the desired widget.
 		try:
-			id = widget.window.xid
+			id = widget.window.get_xid()
 		except AttributeError:
 			id = widget.window.handle # win32
 		self.imagesink.set_xwindow_id(id)

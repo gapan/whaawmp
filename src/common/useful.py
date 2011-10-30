@@ -23,7 +23,7 @@
 #		the permissions granted by the GPL licence by which Whaaw! Media Player
 #		is covered. (See COPYING file for more details)
 
-import os, gobject, sys
+import os, sys
 import urllib
 
 # Nice variables.

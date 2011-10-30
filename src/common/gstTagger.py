@@ -28,7 +28,7 @@ import gst
 from common import useful
 from common.config import cfg
 from common.gstPlayer import player
-import gobject
+from gi.repository import GObject
 
 
 def getCurTags():
@@ -100,7 +100,7 @@ class FileTag:
 	def nextTrack(self):
 		## Read the next files tags.
 		# Stop the player before anything else, and timer.
-		if self.timer: gobject.source_remove(self.timer)
+		if self.timer: GObject.source_remove(self.timer)
 		self.player.set_state(gst.STATE_READY)
 		if (not len(self.queue)):
 			# If the queue is empty, unlock and return.
@@ -116,7 +116,7 @@ class FileTag:
 		# Reset number of trys and start a timer to attempt to read the
 		# tags. (every second).
 		self.trys = 0
-		self.timer = gobject.timeout_add_seconds(1, self.tryTags)
+		self.timer = GObject.timeout_add_seconds(1, self.tryTags)
 	
 	def onMessage(self, bus, message):
 		## Called when a message is emitted, from the playbin.
