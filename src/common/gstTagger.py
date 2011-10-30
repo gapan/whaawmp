@@ -24,7 +24,7 @@
 #		is covered. (See COPYING file for more details)
 
 import os
-import gst
+from gi.repository import Gst
 from common import useful
 from common.config import cfg
 from common.gstPlayer import player
@@ -101,7 +101,7 @@ class FileTag:
 		## Read the next files tags.
 		# Stop the player before anything else, and timer.
 		if self.timer: GObject.source_remove(self.timer)
-		self.player.set_state(gst.STATE_READY)
+		self.player.set_state(Gst.State.READY)
 		if (not len(self.queue)):
 			# If the queue is empty, unlock and return.
 			self.lock = False
@@ -112,7 +112,7 @@ class FileTag:
 		self.current = self.queue[0]
 		del self.queue[0]
 		self.player.set_property('uri', self.current['uri'])
-		self.player.set_state(gst.STATE_PAUSED)
+		self.player.set_state(Gst.State.PAUSED)
 		# Reset number of trys and start a timer to attempt to read the
 		# tags. (every second).
 		self.trys = 0
@@ -120,7 +120,7 @@ class FileTag:
 	
 	def onMessage(self, bus, message):
 		## Called when a message is emitted, from the playbin.
-		if (message.type == gst.MESSAGE_ERROR):
+		if (message.type == Gst.MessageType.ERROR):
 			# If we get an error, BAIL! (to next track)
 			self.nextTrack()
 		return
@@ -156,11 +156,13 @@ class FileTag:
 	
 	def __init__(self):
 		## Need to use a playbin to read the tags.
+		# Initialise Gstreamer.
+		Gst.init([])
 		# Create the playbin.
-		self.player = gst.element_factory_make('playbin2')
+		self.player = Gst.ElementFactory.make('playbin2', 'tagger')
 		# Set the audio & video sinks to fakesinks so weird things don't happen.
-		self.player.set_property('video-sink', gst.element_factory_make('fakesink'))
-		self.player.set_property('audio-sink', gst.element_factory_make('fakesink'))
+		self.player.set_property('video-sink', Gst.ElementFactory.make('fakesink', 'taggerVideoSink'))
+		self.player.set_property('audio-sink', Gst.ElementFactory.make('fakesink', 'taggerAudioSink'))
 		
 		# Get the players bus, add signal watch and connect the onMessage function.
 		bus = self.player.get_bus()

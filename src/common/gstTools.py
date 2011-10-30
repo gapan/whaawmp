@@ -23,10 +23,6 @@
 #		the permissions granted by the GPL licence by which Whaaw! Media Player
 #		is covered. (See COPYING file for more details)
 
-import pygst
-pygst.require('0.10')
-import gst
-
 from common import lists
 
 def streamType(stream):

@@ -24,11 +24,8 @@
 #		is covered. (See COPYING file for more details)
 
 import sys, os, signal, urllib, urlparse
-import pygst
-pygst.require('0.10')
 from gi.repository import GdkX11 # This must be done before Gtk so we can get_xid().
-from gi.repository import Gtk, Gdk, GObject
-import gst
+from gi.repository import Gtk, Gdk, GObject, Gst
 from random import randint
 
 from gui import dialogues, preferences
@@ -280,12 +277,13 @@ class mainWindow:
 		# Sets the sinks.
 		player.setAudioSink()
 		player.setVideoSink()
+		#FIXMEGTK3
 		player.setSubtitleTrack(-1)
 	
 	
 	def onPlayerMessage(self, bus, message):
 		t = message.type
-		if (t == gst.MESSAGE_EOS):
+		if (t == Gst.MessageType.EOS):
 			if (self.wTree.get_object("mnuiRepeatOne").get_active()):
 				player.seek(0)
 			else:
@@ -302,15 +300,15 @@ class mainWindow:
 					# Otherwise, just stop.
 					player.stop()
 		
-		elif (t == gst.MESSAGE_ERROR):
+		elif (t == Gst.MessageType.ERROR):
 			# On an error, empty the currently playing file (also stops it).
 			self.playFile(None)
 			# Show an error about the failure.
 			msg = message.parse_error()
 			signals.emit('error', str(msg[0]) + '\n\n' + str(msg[1]), _('Error!'))
-		elif (t == gst.MESSAGE_STATE_CHANGED and message.src == player.player):
+		elif (t == Gst.MessageType.STATE_CHANGED and message.src == player.player):
 			self.onPlayerStateChange(message)
-		elif (t == gst.MESSAGE_TAG):
+		elif (t == Gst.MessageType.TAG):
 			# Tags!!
 			self.setPlayingTitle(message.parse_tag())
 	
@@ -321,21 +319,21 @@ class mainWindow:
 		# Store the old and new states.
 		old, new = msg[0], msg[1]
 	
-		if (old == gst.STATE_READY and new == gst.STATE_PAUSED):
+		if (old == Gst.State.READY and new == Gst.State.PAUSED):
 			# The player has gone from stopped to paused.
 			# Get the array of audio tracks.
 			self.audioTracks = playerTools.getAudioLangArray(player)
 			# Only enable the audio track menu item if there's more than one audio track.
 			self.wTree.get_object('mnuiAudioTrack').set_sensitive(len(self.audioTracks) > 1)
 		
-		elif (old == gst.STATE_PAUSED and new == gst.STATE_PLAYING):
+		elif (old == Gst.State.PAUSED and new == Gst.State.PLAYING):
 			# The player has just started.
 			# Set the play/pause image to pause.
 			self.playPauseChange(True)
 			# Create the timers.
 			self.createPlayTimers()
 			
-		elif (old == gst.STATE_PLAYING and new == gst.STATE_PAUSED):
+		elif (old == Gst.State.PLAYING and new == Gst.State.PAUSED):
 			# It's just been paused or stopped.
 			self.playPauseChange(False)
 			# Destroy the play timers.
@@ -345,7 +343,7 @@ class mainWindow:
 			# Update the progress bar.
 			self.progressUpdate()
 			
-		elif (old == gst.STATE_PAUSED and new == gst.STATE_READY):
+		elif (old == Gst.State.PAUSED and new == Gst.State.READY):
 			# Stop message (goes through paused when stopping).
 			# Draw the background image.
 			self.drawvideoWindowImage()
