@@ -1,0 +1,3 @@
+https://bugzilla.gnome.org/show_bug.cgi?id=631901
+
+All messages emitted by the player are 'None' rather than an actual message.
