@@ -27,7 +27,7 @@ import sys, os, signal, urllib, urlparse
 import pygst
 pygst.require('0.10')
 from gi.repository import GdkX11 # This must be done before Gtk so we can get_xid().
-from gi.repository import Gtk, Gdk, GObject 
+from gi.repository import Gtk, Gdk, GObject
 import gst
 from random import randint
 
@@ -274,9 +274,8 @@ class mainWindow:
 		## This prepares the player.
 		# Get the bus and connect the signals.
 		bus = player.player.get_bus()
-		#FIXMEGTK3
-		#bus.connect('message', self.onPlayerMessage)
-		#bus.connect('sync-message::element', self.onPlayerSyncMessage)
+		bus.connect('message', self.onPlayerMessage)
+		bus.connect('sync-message::element', self.onPlayerSyncMessage)
 		player.player.connect('about-to-finish', self.aboutToFinish)
 		# Sets the sinks.
 		player.setAudioSink()

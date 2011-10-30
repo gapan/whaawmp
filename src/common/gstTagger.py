@@ -165,8 +165,7 @@ class FileTag:
 		# Get the players bus, add signal watch and connect the onMessage function.
 		bus = self.player.get_bus()
 		bus.add_signal_watch()
-		#FIXMEGTK3
-		#bus.connect('message', self.onMessage)
+		bus.connect('message', self.onMessage)
 
 # So we can run commands easier.
 fileTag = FileTag()
