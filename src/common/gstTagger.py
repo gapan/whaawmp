@@ -101,8 +101,7 @@ class FileTag:
 		## Read the next files tags.
 		# Stop the player before anything else, and timer.
 		if self.timer: GObject.source_remove(self.timer)
-		#FIXMEGTK3
-		#self.player.set_state(gst.STATE_READY)
+		self.player.set_state(gst.STATE_READY)
 		if (not len(self.queue)):
 			# If the queue is empty, unlock and return.
 			self.lock = False
@@ -166,7 +165,8 @@ class FileTag:
 		# Get the players bus, add signal watch and connect the onMessage function.
 		bus = self.player.get_bus()
 		bus.add_signal_watch()
-		bus.connect('message', self.onMessage)
+		#FIXMEGTK3
+		#bus.connect('message', self.onMessage)
 
 # So we can run commands easier.
 fileTag = FileTag()

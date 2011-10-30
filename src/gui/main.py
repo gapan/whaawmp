@@ -274,8 +274,9 @@ class mainWindow:
 		## This prepares the player.
 		# Get the bus and connect the signals.
 		bus = player.player.get_bus()
-		bus.connect('message', self.onPlayerMessage)
-		bus.connect('sync-message::element', self.onPlayerSyncMessage)
+		#FIXMEGTK3
+		#bus.connect('message', self.onPlayerMessage)
+		#bus.connect('sync-message::element', self.onPlayerSyncMessage)
 		player.player.connect('about-to-finish', self.aboutToFinish)
 		# Sets the sinks.
 		player.setAudioSink()
