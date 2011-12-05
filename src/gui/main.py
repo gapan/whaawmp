@@ -248,6 +248,8 @@ class mainWindow:
 	
 	def windowKeyPressed(self, widget, event):
 		## Emits signals defined in lists.keypressDict.
+		# Don't process if alt or ctrl is down.
+		if (event.state & Gdk.ModifierType.MOD1_MASK) or (event.state & Gdk.ModifierType.CONTROL_MASK): return
 		keyname = Gdk.keyval_name(event.keyval)
 		if keyname in lists.keypressDict:
 			for x in lists.keypressDict[keyname]:
@@ -778,11 +780,13 @@ class mainWindow:
 		ctrls = self.wTree.get_object("hboxAdvCtrls")
 		if (toShow):
 			ctrls.show()
+			#hboxHeight = ctrls.get_allocation().height
+			#useful.modifyWinHeight(self.mainWindow, hboxHeight)
 		else:
 			ctrls.hide()
 			# If we're closing it, we should shrink the main window too.
-			hboxHeight = ctrls.get_allocation().height
-			useful.modifyWinHeight(self.mainWindow, - (hboxHeight))
+			#hboxHeight = ctrls.get_allocation().height
+			#useful.modifyWinHeight(self.mainWindow, - (hboxHeight))
 	
 	def openBugReporter(self, widget):
 		## Opens the bugs webpage.
